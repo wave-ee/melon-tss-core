@@ -1,8 +1,8 @@
-"""The fixed PADF-EW+FM regression protocol.
+"""Regression utilities for the melon vision TSS workflow.
 
-The two branches are both part of the final method: SmoothL1 (Huber, beta=1)
-and MSE are trained separately, each uses horizontal-flip TTA, their predictions
-are averaged in TSS units, and the result is reduced by fruit-level median.
+SmoothL1 (Huber, beta=1) and MSE branches use horizontal-flip augmentation.
+Their predictions are averaged in TSS units, followed by fruit-level median
+aggregation.
 """
 import numpy as np
 import torch
@@ -54,7 +54,7 @@ def predict_branch(model, regions, physics, target_mean, target_std):
 
 
 def fuse_huber_mse(huber_tss, mse_tss):
-    """Fixed equal-weight fusion of the two final branches in TSS units."""
+    """Equal-weight fusion of the two branch predictions in TSS units."""
     huber_tss = np.asarray(huber_tss, dtype=float)
     mse_tss = np.asarray(mse_tss, dtype=float)
     if huber_tss.ndim != 1 or huber_tss.shape != mse_tss.shape:
@@ -65,7 +65,7 @@ def fuse_huber_mse(huber_tss, mse_tss):
 @torch.no_grad()
 def predict_best_protocol(huber_model, mse_model, regions, physics,
                           huber_mean, huber_std, mse_mean, mse_std):
-    """Run the complete highest-scoring inference path for one image batch."""
+    """Run the image-to-TSS inference path for one image batch."""
     huber = predict_branch(huber_model, regions, physics, huber_mean, huber_std)
     mse = predict_branch(mse_model, regions, physics, mse_mean, mse_std)
     return 0.5 * (huber + mse)

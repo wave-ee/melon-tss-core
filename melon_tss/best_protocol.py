@@ -1,8 +1,7 @@
-"""One-call wiring for the highest-scoring PADF-EW+FM method.
+"""One-call wiring for the melon vision TSS workflow.
 
-This module exposes one fixed path. A caller supplies a predicted mask, a
-fold-fitted physical pipeline,
-and the two trained branch checkpoints.
+This module combines a predicted mask, a fold-fitted physical pipeline, and
+the trained regression branches for image-to-TSS inference.
 """
 import numpy as np
 import torch
@@ -41,5 +40,5 @@ def predict_best(huber_model, mse_model, regions, physical,
 
 
 def aggregate_best(image_predictions, fruit_ids):
-    """Apply the final within-fruit median aggregation."""
+    """Apply within-fruit median aggregation."""
     return fruit_median(image_predictions, fruit_ids)

@@ -9,7 +9,7 @@ class FeatureBackbone(nn.Module):
     def __init__(self, name="convnext_tiny", pretrained=False):
         super().__init__()
         if name != "convnext_tiny":
-            raise ValueError("This core release includes ConvNeXt-Tiny only")
+            raise ValueError("The melon TSS workflow uses a ConvNeXt-Tiny backbone")
         self.name = name
         model = tvm.convnext_tiny(weights=tvm.ConvNeXt_Tiny_Weights.DEFAULT if pretrained else None)
         self.features = model.features

@@ -3,8 +3,8 @@
 Regression architecture and prediction aggregation were extracted from the
 saved `padf_historical_protocol_balanced_20261004` experiment source snapshot.
 The segmentation modules and physical descriptors were extracted from the
-corresponding project implementations. Routine dataset loaders, path defaults,
-unused backbones and training orchestration are omitted.
+corresponding project implementations. The source list below records the
+provenance of the modules represented in this repository.
 
 ```json
 [

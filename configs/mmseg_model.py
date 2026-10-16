@@ -1,4 +1,4 @@
-# Extracted model graph only; no dataset or training runner.
+# MMSegmentation model graph for the melon vision TSS workflow.
 # TopoSegLoss in the source is an alias of MMSeg DiceLoss.
 custom_imports = dict(imports=["melon_tss.mmseg_integration"], allow_failed_imports=False)
 model = {'auxiliary_head': {'align_corners': False,
