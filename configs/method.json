@@ -1,0 +1,70 @@
+{
+  "method": "PADF-EW+FM",
+  "description": "Physics-assisted deep fusion with equal Huber/MSE branches and fruit-median aggregation",
+  "mask_labels": {
+    "background": 0,
+    "net": 1,
+    "skin": 2,
+    "ruler": 3
+  },
+  "ruler_length_cm": 5.0,
+  "physical_features": 161,
+  "region_order": [
+    "rgb",
+    "melon",
+    "net",
+    "skin",
+    "ruler"
+  ],
+  "regression": {
+    "backbone": "convnext_tiny",
+    "image_size": 320,
+    "batch_size": 4,
+    "epochs": 80,
+    "patience": 18,
+    "freeze_backbone_epochs": 5,
+    "lr_backbone": 1e-05,
+    "lr_head": 0.0002,
+    "weight_decay": 0.0001,
+    "dropout": 0.25,
+    "physics_components": 16,
+    "seed": 20260728,
+    "huber_beta": 1.0,
+    "amp": true,
+    "tta": true
+  },
+  "optimizer": "AdamW; recreated when backbone unfreezes at epoch 6",
+  "gradient_clip_norm": 5.0,
+  "target_scaling": "training-fold mean and population std",
+  "seed_protocol": "once per loss branch; continuous RNG across sequential folds",
+  "segmentation": {
+    "model": "DAUNet",
+    "topology_loss": "net clDice",
+    "decode_losses": {
+      "cross_entropy": 1.0,
+      "dice": 2.0,
+      "net_cldice": 0.2
+    },
+    "input_size": 512,
+    "mask_source": "full-coverage predicted masks; ground-truth masks are never substituted"
+  },
+  "regression_branches": {
+    "huber": "smooth_l1_loss(beta=1.0) on standardized TSS",
+    "mse": "mse_loss on standardized TSS",
+    "branch_fusion": "equal average in TSS units"
+  },
+  "prediction_aggregation": "horizontal-flip TTA for both branches -> equal Huber/MSE average -> within-fruit median",
+  "evaluation": {
+    "folds": 5,
+    "images": 250,
+    "fruit_groups": 146,
+    "images_per_fold": 50,
+    "split_method": "fixed target-stratified constrained allocation of complete fruit groups",
+    "split_seed": 20261003,
+    "checkpoint_selection": "validation RMSE improves by >1e-6, or math.isclose RMSE with higher R2; starts at epoch 1; validation used for checkpoint selection",
+    "primary_weighting": "pooled image-weighted out-of-fold R2 after fruit median broadcast",
+    "reference_primary_r2": 0.7187329120173167,
+    "reference_one_vote_per_fruit_r2": 0.693979955,
+    "exact_assignments_included": false
+  }
+}

@@ -1,0 +1,16 @@
+Melon TSS core implementation
+
+The DAConv/DAUNet integration and net clDice implementation are extracted/adapted
+from the project's modified MMSegmentation source files. Those source files
+carry: Copyright (c) Open-MMLab. All rights reserved.
+
+MMSegmentation: Copyright 2020 MMSegmentation Authors; Apache License 2.0.
+Upstream: https://github.com/open-mmlab/mmsegmentation
+Changes here: extracted custom modules into a standalone package, added a
+namespaced registry integration, replaced the TopoSegLoss alias by DiceLoss,
+and added small input/output helpers and documentation.
+
+ConvNeXt is provided by torchvision, not vendored in this repository.
+The connectivity loss follows the clDice concept, with the soft morphology
+and skeleton accumulation used by this project's saved implementation.
+See SOURCES.md for source hashes and references.
